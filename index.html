@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <title>TamimTrack — فلوسك تحت سيطرتك</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #080d1a;
+      --card: #111827;
+      --card2: #172033;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --gold: #f5b942;
+      --gold2: #e89b16;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #38bdf8;
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 20px 50px rgba(0,0,0,.28);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% -10%, #263657 0, transparent 38%),
+        var(--bg);
+      color: var(--text);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* ---------- البداية ---------- */
+
+    .welcome {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .welcome-box {
+      width: min(100%, 500px);
+      text-align: center;
+    }
+
+    .logo {
+      width: 105px;
+      height: 105px;
+      margin: 0 auto 25px;
+      border-radius: 30px;
+      background:
+        linear-gradient(145deg, #f8c75b, #d98508);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      box-shadow:
+        0 20px 50px rgba(245,185,66,.22);
+    }
+
+    .welcome h1 {
+      margin: 0;
+      font-size: 42px;
+      letter-spacing: -.8px;
+    }
+
+    .tagline {
+      margin: 10px 0 28px;
+      color: var(--gold);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .intro-card {
+      padding: 24px;
+      background: rgba(17,24,39,.9);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .intro-card h2 {
+      margin-top: 0;
+    }
+
+    .features {
+      display: grid;
+      gap: 11px;
+      margin: 22px 0;
+      text-align: right;
+    }
+
+    .feature {
+      padding: 13px 15px;
+      background: rgba(255,255,255,.035);
+      border-radius: 15px;
+      color: #dbe4f0;
+    }
+
+    .primary {
+      width: 100%;
+      border: 0;
+      padding: 16px;
+      border-radius: 16px;
+      background: linear-gradient(135deg,var(--gold),var(--gold2));
+      color: #15110a;
+      font-weight: 900;
+      font-size: 17px;
+      box-shadow: 0 12px 30px rgba(245,185,66,.18);
+    }
+
+    .primary:active {
+      transform: scale(.98);
+    }
+
+    /* ---------- الاسم ---------- */
+
+    .name-box {
+      width: min(100%, 470px);
+      margin: auto;
+      padding: 30px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .name-box h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .name-box p {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: #0d1423;
+      color: white;
+      margin-top: 9px;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--gold);
+    }
+
+    /* ---------- التطبيق ---------- */
+
+    .app {
+      width: min(100%, 760px);
+      margin: auto;
+      padding: 18px 14px 100px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .hello small {
+      color: var(--muted);
+    }
+
+    .hello h1 {
+      margin: 4px 0 0;
+      font-size: 23px;
+    }
+
+    .settings-btn {
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--card);
+      color: white;
+      font-size: 20px;
+    }
+
+    .balance {
+      padding: 25px;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg,#202e49,#101827);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .balance span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .balance h2 {
+      margin: 10px 0 5px;
+      font-size: 36px;
+    }
+
+    .balance small {
+      color: #b8c4d4;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      padding: 15px 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 7px;
+    }
+
+    .stat strong {
+      font-size: 15px;
+    }
+
+    .income {
+      color: var(--green);
+    }
+
+    .expense {
+      color: var(--red);
+    }
+
+    .card {
+      padding: 19px;
+      margin-bottom: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 23px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card-title h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .budget-number {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 11px;
+      overflow: hidden;
+      background: #263247;
+      border-radius: 20px;
+      margin: 14px 0 9px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg,var(--gold),#ffd978);
+      transition: width .3s;
+    }
+
+    .budget-info {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action {
+      padding: 17px;
+      border: 0;
+      border-radius: 17px;
+      color: white;
+      font-weight: 800;
+    }
+
+    .action.expense-btn {
+      background: #3a1d25;
+    }
+
+    .action.income-btn {
+      background: #123323;
+    }
+
+    .search {
+      margin-bottom: 12px;
+    }
+
+    .transaction {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .transaction:last-child {
+      border-bottom: 0;
+    }
+
+    .transaction-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #202b40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+
+    .transaction-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .transaction-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .transaction-info small {
+      color: var(--muted);
+    }
+
+    .transaction-amount {
+      text-align: left;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .transaction-tools {
+      display: flex;
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .mini {
+      border: 0;
+      background: #263249;
+      color: white;
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-size: 11px;
+    }
+
+    .empty {
+      padding: 25px 5px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .category-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 13px 0;
+    }
+
+    .category-row span:first-child {
+      width: 75px;
+      font-size: 13px;
+    }
+
+    .cat-bar {
+      flex: 1;
+      height: 8px;
+      background: #263247;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .cat-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: inherit;
+    }
+
+    .category-row strong {
+      width: 75px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(calc(100% - 24px), 700px);
+      padding: 9px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 6px;
+      background: rgba(17,24,39,.94);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: 21px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.35);
+      z-index: 10;
+    }
+
+    .nav-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 9px 4px;
+      border-radius: 14px;
+      font-size: 11px;
+    }
+
+    .nav-btn.active {
+      background: rgba(245,185,66,.13);
+      color: var(--gold);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0,0,0,.7);
+      padding: 18px;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(100%,600px);
+      padding: 21px;
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 25px 25px 20px 20px;
+      max-height: 90vh;
+      overflow: auto;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .close {
+      border: 0;
+      background: #263247;
+      color: white;
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    .type-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
+    .type-btn {
+      padding: 12px;
+      border: 1px solid var(--border);
+      background: #0d1423;
+      color: var(--muted);
+      border-radius: 13px;
+    }
+
+    .type-btn.selected {
+      background: rgba(245,185,66,.14);
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .danger {
+      background: #351923;
+      color: #ffb4bd;
+      border: 1px solid #622632;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      .welcome h1 {
+        font-size: 34px;
+      }
+
+      .balance h2 {
+        font-size: 31px;
+      }
+
+      .stats {
+        gap: 6px;
+      }
+
+      .stat {
+        padding: 13px 5px;
+      }
+
+      .stat strong {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- شاشة المقدمة -->
+  <section id="welcomeScreen" class="screen active">
+    <div class="welcome">
+      <div class="welcome-box">
+
+        <div class="logo">💰</div>
+
+        <h1>TamimTrack</h1>
+
+        <div class="tagline">
+          فلوسك تحت سيطرتك
+        </div>
+
+        <div class="intro-card">
+
+          <h2>🚀 رحلة TamimTrack</h2>
+
+          <p>
+            تطبيق بسيط يساعدك تفهم أموالك،
+            تتابع دخلك ومصاريفك، وتخطط لميزانيتك.
+          </p>
+
+          <div class="features">
+
+            <div class="feature">
+              💰 تتبع الدخل والمصاريف
+            </div>
+
+            <div class="feature">
+              📊 افهم أين تذهب أموالك
+            </div>
+
+            <div class="feature">
+              🎯 حدد ميزانيتك وتابعها
+            </div>
+
+            <div class="feature">
+              📅 راجع وضعك المالي يوميًا وشهريًا
+            </div>
+
+            <div class="feature">
+              💾 بياناتك محفوظة على جهازك
+            </div>
+
+          </div>
+
+          <button class="primary" onclick="showNameScreen()">
+            🚀 لنبدأ
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- شاشة الاسم -->
+  <section id="nameScreen" class="screen">
+
+    <div class="name-box">
+
+      <div class="logo">👋</div>
+
+      <h1>أهلًا بك</h1>
+
+      <p>
+        قبل أن نبدأ، ما الاسم الذي تريد أن نناديك به؟
+      </p>
+
+      <input
+        id="nameInput"
+        type="text"
+        maxlength="30"
+        placeholder="اكتب اسمك هنا"
+      >
+
+      <button
+        class="primary"
+        style="margin-top:15px"
+        onclick="saveName()"
+      >
+        🚀 ابدأ استخدام TamimTrack
+      </button>
+
+      <button
+        onclick="skipName()"
+        style="
+          margin-top:10px;
+          width:100%;
+          padding:13px;
+          border:0;
+          background:transparent;
+          color:#94a3b8;
+        "
+      >
+        تخطي الآن
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- التطبيق -->
+  <section id="appScreen" class="screen">
+
+    <main class="app">
+
+      <header class="topbar">
+
+        <div class="hello">
+
+          <small>أهلًا بك 👋</small>
+
+          <h1 id="userGreeting">
+            جاهز؟
+          </h1>
+
+        </div>
+
+        <button
+          class="settings-btn"
+          onclick="openSettings()"
+        >
+          ⚙️
+        </button>
+
+      </header>
+
+
+      <!-- الرصيد -->
+      <section class="balance">
+
+        <span>الرصيد الحالي</span>
+
+        <h2 id="balance">
+          €0.00
+        </h2>
+
+        <small>
+          بناءً على العمليات التي أضفتها
+        </small>
+
+      </section>
+
+
+      <!-- الإحصائيات -->
+      <section class="stats">
+
+        <div class="stat">
+          <span>📈 الدخل</span>
+          <strong
+            id="incomeTotal"
+            class="income"
+          >
+            €0.00
+          </strong>
+        </div>
+
+        <div class="stat">
+          <span>📉 المصاريف</span>
+          <strong
+            id="expenseTotal"
+            class="expense"
+          >
+            €0.00
+          </strong>
+        </div>
+
+        <div class="stat">
+          <span>📅 هذا الشهر</span>
+          <strong id="monthExpense">
+            €0.00
+          </strong>
+        </div>
+
+      </section>
+
+
+      <!-- الميزانية -->
+      <section class="card">
+
+        <div class="card-title">
+
+          <h2>🎯 ميزانية الشهر</h2>
+
+          <span
+            id="budgetNumber"
+            class="budget-number"
+          >
+            €0
+          </span>
+
+        </div>
+
+        <div class="progress">
+          <div
+            id="budgetProgress"
+            class="progress-bar"
+          ></div>
+        </div>
+
+        <div class="budget-info">
+
+          <span id="budgetSpent">
+            المصروف €0
+          </span>
+
+          <span id="budgetRemaining">
+            المتبقي €0
+          </span>
+
+        </div>
+
+      </section>
+
+
+      <!-- أزرار سريعة -->
+      <section class="card">
+
+        <div class="card-title">
+          <h2>⚡ إضافة سريعة</h2>
+        </div>
+
+        <div class="quick-actions">
+
+          <button
+            class="action expense-btn"
+            onclick="openTransaction('expense')"
+          >
+            ➖ مصروف
+          </button>
+
+          <button
+            class="action income-btn"
+            onclick="openTransaction('income')"
+          >
+            ➕ دخل
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- العمليات -->
+      <section class="card">
+
+        <div class="card-title">
+
+          <h2>🧾 آخر العمليات</h2>
+
+          <span
+            id="transactionCount"
+            class="section-note"
+          >
+            0 عملية
+          </span>
+
+        </div>
+
+        <input
+          id="searchInput"
+          class="search"
+          type="search"
+          placeholder="🔎 ابحث عن عملية..."
+          oninput="renderTransactions()"
+        >
+
+        <div id="transactions"></div>
+
+      </section>
+
+
+      <!-- التصنيفات -->
+      <section class="card">
+
+        <div class="card-title">
+          <h2>📊 المصاريف حسب التصنيف</h2>
+        </div>
+
+        <div id="categories"></div>
+
+      </section>
+
+    </main>
+
+
+    <!-- القائمة -->
+    <nav class="bottom-nav">
+
+      <button
+        class="nav-btn active"
+        onclick="scrollToTop()"
+      >
+        🏠<br>الرئيسية
+      </button>
+
+      <button
+        class="nav-btn"
+        onclick="openTransaction('expense')"
+      >
+        ➕<br>مصروف
+      </button>
+
+      <button
+        class="nav-btn"
+        onclick="openTransaction('income')"
+      >
+        💰<br>دخل
+      </button>
+
+      <button
+        class="nav-btn"
+        onclick="openSettings()"
+      >
+        ⚙️<br>الإعدادات
+      </button>
+
+    </nav>
+
+  </section>
+
+
+  <!-- نافذة العملية -->
+  <div
+    id="transactionModal"
+    class="modal"
+    onclick="closeModalOutside(event)"
+  >
+
+    <div class="modal-box">
+
+      <div class="modal-head">
+
+        <h2 id="modalTitle">
+          إضافة عملية
+        </h2>
+
+        <button
+          class="close"
+          onclick="closeTransaction()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+      <div class="type-switch">
+
+        <button
+          id="expenseType"
+          class="type-btn selected"
+          onclick="setTransactionType('expense')"
+        >
+          ➖ مصروف
+        </button>
+
+        <button
+          id="incomeType"
+          class="type-btn"
+          onclick="setTransactionType('income')"
+        >
+          ➕ دخل
+        </button>
+
+      </div>
+
+      <label>اسم العملية</label>
+
+      <input
+        id="transactionName"
+        type="text"
+        placeholder="مثلاً: مشتريات"
+      >
+
+      <label>المبلغ (€)</label>
+
+      <input
+        id="transactionAmount"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="0.00"
+      >
+
+      <label>التصنيف</label>
+
+      <select id="transactionCategory">
+
+        <option>🍔 طعام</option>
+        <option>🚗 مواصلات</option>
+        <option>🛒 تسوق</option>
+        <option>🏠 فواتير</option>
+        <option>💊 صحة</option>
+        <option>🎮 ترفيه</option>
+        <option>💳 ديون</option>
+        <option>💼 عمل</option>
+        <option>📦 أخرى</option>
+
+      </select>
+
+      <label>التاريخ</label>
+
+      <input
+        id="transactionDate"
+        type="date"
+      >
+
+      <label>ملاحظة</label>
+
+      <input
+        id="transactionNote"
+        type="text"
+        placeholder="ملاحظة اختيارية"
+      >
+
+      <button
+        class="primary"
+        onclick="saveTransaction()"
+        style="margin-top:16px"
+      >
+        💾 حفظ العملية
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- الإعدادات -->
+  <div
+    id="settingsModal"
+    class="modal"
+    onclick="closeSettingsOutside(event)"
+  >
+
+    <div class="modal-box">
+
+      <div class="modal-head">
+
+        <h2>⚙️ الإعدادات</h2>
+
+        <button
+          class="close"
+          onclick="closeSettings()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+      <label>اسمك</label>
+
+      <input
+        id="settingsName"
+        type="text"
+        maxlength="30"
+      >
+
+      <button
+        class="primary"
+        onclick="changeName()"
+      >
+        💾 حفظ الاسم
+      </button>
+
+      <button
+        onclick="setBudget()"
+        style="
+          width:100%;
+          margin-top:10px;
+          padding:14px;
+          border:0;
+          border-radius:14px;
+          background:#263247;
+          color:white;
+        "
+      >
+        🎯 تحديد ميزانية الشهر
+      </button>
+
+      <button
+        onclick="exportData()"
+        style="
+          width:100%;
+          margin-top:10px;
+          padding:14px;
+          border:0;
+          border-radius:14px;
+          background:#263247;
+          color:white;
+        "
+      >
+        📤 تصدير نسخة احتياطية
+      </button>
+
+      <label
+        style="
+          display:block;
+          margin-top:20px;
+          padding:14px;
+          background:#263247;
+          border-radius:14px;
+          text-align:center;
+          cursor:pointer;
+        "
+      >
+        📥 استيراد نسخة احتياطية
+
+        <input
+          id="importFile"
+          type="file"
+          accept=".json"
+          onchange="importData(event)"
+          style="display:none"
+        >
+      </label>
+
+      <button
+        class="danger"
+        onclick="resetApp()"
+        style="
+          width:100%;
+          margin-top:10px;
+          padding:14px;
+          border-radius:14px;
+        "
+      >
+        🗑️ حذف جميع البيانات
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    /* ================================
+       TamimTrack
+       تطبيق مالي عربي
+       ================================ */
+
+    const STORAGE_KEY = "tamimtrack_data_v1";
+
+    let data = {
+      name: "",
+      budget: 0,
+      transactions: []
+    };
+
+    let currentType = "expense";
+    let editingId = null;
+
+
+    function loadData() {
+
+      try {
+
+        const saved =
+          localStorage.getItem(STORAGE_KEY);
+
+        if (saved) {
+          data = JSON.parse(saved);
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        data = {
+          name: "",
+          budget: 0,
+          transactions: []
+        };
+
+      }
+
+    }
+
+
+    function saveData() {
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+      );
+
+    }
+
+
+    function showScreen(id) {
+
+      document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+          screen.classList.remove("active");
+        });
+
+      document
+        .getElementById(id)
+        .classList.add("active");
+
+    }
+
+
+    function showNameScreen() {
+
+      showScreen("nameScreen");
+
+      setTimeout(() => {
+        document
+          .getElementById("nameInput")
+          .focus();
+      }, 100);
+
+    }
+
+
+    function saveName() {
+
+      const input =
+        document.getElementById("nameInput");
+
+      const name =
+        input.value.trim();
+
+      if (!name) {
+
+        alert("اكتب اسمك أولاً 👋");
+
+        input.focus();
+
+        return;
+      }
+
+      data.name = name;
+
+      saveData();
+
+      openApp();
+
+    }
+
+
+    function skipName() {
+
+      data.name = "صديقي";
+
+      saveData();
+
+      openApp();
+
+    }
+
+
+    function openApp() {
+
+      showScreen("appScreen");
+
+      updateGreeting();
+
+      renderAll();
+
+    }
+
+
+    function updateGreeting() {
+
+      const greeting =
+        document.getElementById("userGreeting");
+
+      greeting.textContent =
+        `صباح الخير، ${data.name || "صديقي"} 👋`;
+
+    }
+
+
+    function openTransaction(type = "expense") {
+
+      editingId = null;
+
+      document
+        .getElementById("transactionModal")
+        .classList.add("show");
+
+      document
+        .getElementById("transactionName")
+        .value = "";
+
+      document
+        .getElementById("transactionAmount")
+        .value = "";
+
+      document
+        .getElementById("transactionNote")
+        .value = "";
+
+      document
+        .getElementById("transactionDate")
+        .value =
+        new Date().toISOString().split("T")[0];
+
+      document
+        .getElementById("modalTitle")
+        .textContent =
+        "إضافة عملية";
+
+      setTransactionType(type);
+
+    }
+
+
+    function closeTransaction() {
+
+      document
+        .getElementById("transactionModal")
+        .classList.remove("show");
+
+    }
+
+
+    function closeModalOutside(event) {
+
+      if (event.target.id === "transactionModal") {
+        closeTransaction();
+      }
+
+    }
+
+
+    function setTransactionType(type) {
+
+      currentType = type;
+
+      document
+        .getElementById("expenseType")
+        .classList.toggle(
+          "selected",
+          type === "expense"
+        );
+
+      document
+        .getElementById("incomeType")
+        .classList.toggle(
+          "selected",
+          type === "income"
+        );
+
+    }
+
+
+    function saveTransaction() {
+
+      const name =
+        document
+          .getElementById("transactionName")
+          .value
+          .trim();
+
+      const amount =
+        Number(
+          document
+            .getElementById("transactionAmount")
+            .value
+        );
+
+      const category =
+        document
+          .getElementById("transactionCategory")
+          .value;
+
+      const date =
+        document
+          .getElementById("transactionDate")
+          .value;
+
+      const note =
+        document
+          .getElementById("transactionNote")
+          .value
+          .trim();
+
+
+      if (!name) {
+
+        alert("اكتب اسم العملية ✍️");
+
+        return;
+      }
+
+
+      if (!amount || amount <= 0) {
+
+        alert("أدخل مبلغًا صحيحًا 💶");
+
+        return;
+      }
+
+
+      if (!date) {
+
+        alert("اختر التاريخ 📅");
+
+        return;
+      }
+
+
+      if (editingId !== null) {
+
+        const item =
+          data.transactions.find(
+            t => t.id === editingId
+          );
+
+        if (item) {
+
+          item.type = currentType;
+          item.name = name;
+          item.amount = amount;
+          item.category = category;
+          item.date = date;
+          item.note = note;
+
+        }
+
+      } else {
+
+        data.transactions.push({
+
+          id:
+            Date.now() +
+            Math.random(),
+
+          type: currentType,
+
+          name,
+
+          amount,
+
+          category,
+
+          date,
+
+          note
+
+        });
+
+      }
+
+
+      saveData();
+
+      closeTransaction();
+
+      renderAll();
+
+    }
+
+
+    function editTransaction(id) {
+
+      const item =
+        data.transactions.find(
+          t => t.id === id
+        );
+
+      if (!item) return;
+
+      editingId = id;
+
+      document
+        .getElementById("transactionModal")
+        .classList.add("show");
+
+      document
+        .getElementById("modalTitle")
+        .textContent =
+        "✏️ تعديل العملية";
+
+      document
+        .getElementById("transactionName")
+        .value =
+        item.name;
+
+      document
+        .getElementById("transactionAmount")
+        .value =
+        item.amount;
+
+      document
+        .getElementById("transactionCategory")
+        .value =
+        item.category;
+
+      document
+        .getElementById("transactionDate")
+        .value =
+        item.date;
+
+      document
+        .getElementById("transactionNote")
+        .value =
+        item.note || "";
+
+      setTransactionType(item.type);
+
+    }
+
+
+    function deleteTransaction(id) {
+
+      const ok =
+        confirm(
+          "هل تريد حذف هذه العملية؟ 🗑️"
+        );
+
+      if (!ok) return;
+
+      data.transactions =
+        data.transactions.filter(
+          t => t.id !== id
+        );
+
+      saveData();
+
+      renderAll();
+
+    }
+
+
+    function renderAll() {
+
+      updateStats();
+
+      renderTransactions();
+
+      renderCategories();
+
+    }
+
+
+    function updateStats() {
+
+      const income =
+        data.transactions
+          .filter(t => t.type === "income")
+          .reduce(
+            (sum,t) => sum + Number(t.amount),
+            0
+          );
+
+      const expenses =
+        data.transactions
+          .filter(t => t.type === "expense")
+          .reduce(
+            (sum,t) => sum + Number(t.amount),
+            0
+          );
+
+      const balance =
+        income - expenses;
+
+
+      const now =
+        new Date();
+
+      const month =
+        now.getMonth();
+
+      const year =
+        now.getFullYear();
+
+
+      const monthExpense =
+        data.transactions
+          .filter(t => {
+
+            if (t.type !== "expense")
+              return false;
+
+            const date =
+              new Date(t.date);
+
+            return (
+              date.getMonth() === month &&
+              date.getFullYear() === year
+            );
+
+          })
+          .reduce(
+            (sum,t) => sum + Number(t.amount),
+            0
+          );
+
+
+      document
+        .getElementById("balance")
+        .textContent =
+        euro(balance);
+
+      document
+        .getElementById("incomeTotal")
+        .textContent =
+        euro(income);
+
+      document
+        .getElementById("expenseTotal")
+        .textContent =
+        euro(expenses);
+
+      document
+        .getElementById("monthExpense")
+        .textContent =
+        euro(monthExpense);
+
+
+      const budget =
+        Number(data.budget) || 0;
+
+      document
+        .getElementById("budgetNumber")
+        .textContent =
+        euro(budget);
+
+
+      document
+        .getElementById("budgetSpent")
+        .textContent =
+        `المصروف ${euro(monthExpense)}`;
+
+
+      const remaining =
+        budget - monthExpense;
+
+
+      document
+        .getElementById("budgetRemaining")
+        .textContent =
+        `المتبقي ${euro(remaining)}`;
+
+
+      const percentage =
+        budget > 0
+          ? Math.min(
+              100,
+              (monthExpense / budget) * 100
+            )
+          : 0;
+
+
+      document
+        .getElementById("budgetProgress")
+        .style.width =
+        `${percentage}%`;
+
+    }
+
+
+    function renderTransactions() {
+
+      const container =
+        document.getElementById(
+          "transactions"
+        );
+
+      const search =
+        document
+          .getElementById("searchInput")
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      let list =
+        [...data.transactions]
+          .sort(
+            (a,b) =>
+              new Date(b.date) -
+              new Date(a.date)
+          );
+
+
+      if (search) {
+
+        list =
+          list.filter(t =>
+            `${t.name} ${t.category} ${t.note || ""}`
+              .toLowerCase()
+              .includes(search)
+          );
+
+      }
+
+
+      document
+        .getElementById("transactionCount")
+        .textContent =
+        `${data.transactions.length} عملية`;
+
+
+      if (!list.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            لا توجد عمليات حتى الآن 📭
+          </div>
+        `;
+
+        return;
+      }
+
+
+      container.innerHTML =
+        list.map(item => {
+
+          const isIncome =
+            item.type === "income";
+
+          const icon =
+            isIncome
+              ? "💰"
+              : getCategoryIcon(item.category);
+
+          const amount =
+            `${isIncome ? "+" : "-"}${euro(item.amount)}`;
+
+
+          return `
+
+            <div class="transaction">
+
+              <div class="transaction-icon">
+                ${icon}
+              </div>
+
+              <div class="transaction-info">
+
+                <strong>
+                  ${escapeHTML(item.name)}
+                </strong>
+
+                <small>
+                  ${escapeHTML(item.category)}
+                  ·
+                  ${item.date}
+                </small>
+
+                ${
+                  item.note
+                    ? `
+                      <small>
+                        ${escapeHTML(item.note)}
+                      </small>
+                    `
+                    : ""
+                }
+
+                <div class="transaction-tools">
+
+                  <button
+                    class="mini"
+                    onclick="editTransaction(${item.id})"
+                  >
+                    ✏️ تعديل
+                  </button>
+
+                  <button
+                    class="mini"
+                    onclick="deleteTransaction(${item.id})"
+                  >
+                    🗑️ حذف
+                  </button>
+
+                </div>
+
+              </div>
+
+              <div
+                class="transaction-amount ${
+                  isIncome
+                    ? "income"
+                    : "expense"
+                }"
+              >
+                ${amount}
+              </div>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+    }
+
+
+    function renderCategories() {
+
+      const container =
+        document.getElementById(
+          "categories"
+        );
+
+
+      const totals = {};
+
+      data.transactions
+        .filter(t => t.type === "expense")
+        .forEach(t => {
+
+          totals[t.category] =
+            (totals[t.category] || 0) +
+            Number(t.amount);
+
+        });
+
+
+      const entries =
+        Object.entries(totals)
+          .sort(
+            (a,b) => b[1] - a[1]
+          );
+
+
+      if (!entries.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            أضف مصاريف حتى تظهر الإحصائيات 📊
+          </div>
+        `;
+
+        return;
+      }
+
+
+      const max =
+        entries[0][1];
+
+
+      container.innerHTML =
+        entries.map(([category,total]) => {
+
+          const width =
+            max > 0
+              ? (total / max) * 100
+              : 0;
+
+          return `
+
+            <div class="category-row">
+
+              <span>
+                ${escapeHTML(category)}
+              </span>
+
+              <div class="cat-bar">
+
+                <div
+                  class="cat-fill"
+                  style="width:${width}%"
+                ></div>
+
+              </div>
+
+              <strong>
+                ${euro(total)}
+              </strong>
+
+            </div>
+
+          `;
+
+        }).join("");
+
+    }
+
+
+    function getCategoryIcon(category) {
+
+      if (category.startsWith("🍔"))
+        return "🍔";
+
+      if (category.startsWith("🚗"))
+        return "🚗";
+
+      if (category.startsWith("🛒"))
+        return "🛒";
+
+      if (category.startsWith("🏠"))
+        return "🏠";
+
+      if (category.startsWith("💊"))
+        return "💊";
+
+      if (category.startsWith("🎮"))
+        return "🎮";
+
+      if (category.startsWith("💳"))
+        return "💳";
+
+      return "📦";
+
+    }
+
+
+    function euro(value) {
+
+      return new Intl.NumberFormat(
+        "de-DE",
+        {
+          style: "currency",
+          currency: "EUR"
+        }
+      ).format(
+        Number(value) || 0
+      );
+
+    }
+
+
+    function escapeHTML(value) {
+
+      return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+    }
+
+
+    function openSettings() {
+
+      document
+        .getElementById("settingsName")
+        .value =
+        data.name || "";
+
+      document
+        .getElementById("settingsModal")
+        .classList.add("show");
+
+    }
+
+
+    function closeSettings() {
+
+      document
+        .getElementById("settingsModal")
+        .classList.remove("show");
+
+    }
+
+
+    function closeSettingsOutside(event) {
+
+      if (event.target.id === "settingsModal") {
+        closeSettings();
+      }
+
+    }
+
+
+    function changeName() {
+
+      const name =
+        document
+          .getElementById("settingsName")
+          .value
+          .trim();
+
+
+      if (!name) {
+
+        alert("اكتب اسمًا صحيحًا 👋");
+
+        return;
+      }
+
+
+      data.name = name;
+
+      saveData();
+
+      updateGreeting();
+
+      closeSettings();
+
+    }
+
+
+    function setBudget() {
+
+      const value =
+        prompt(
+          "كم ميزانيتك لهذا الشهر باليورو؟",
+          data.budget || ""
+        );
+
+
+      if (value === null)
+        return;
+
+
+      const budget =
+        Number(value);
+
+
+      if (
+        Number.isNaN(budget) ||
+        budget < 0
+      ) {
+
+        alert("أدخل مبلغًا صحيحًا.");
+
+        return;
+      }
+
+
+      data.budget = budget;
+
+      saveData();
+
+      renderAll();
+
+    }
+
+
+    function exportData() {
+
+      const blob =
+        new Blob(
+          [
+            JSON.stringify(
+              data,
+              null,
+              2
+            )
+          ],
+          {
+            type:
+              "application/json"
+          }
+        );
+
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const a =
+        document.createElement("a");
+
+      a.href = url;
+
+      a.download =
+        "TamimTrack-backup.json";
+
+      a.click();
+
+      URL.revokeObjectURL(url);
+
+    }
+
+
+    function importData(event) {
+
+      const file =
+        event.target.files[0];
+
+      if (!file) return;
+
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function() {
+
+          try {
+
+            const imported =
+              JSON.parse(
+                reader.result
+              );
+
+
+            if (
+              typeof imported !== "object" ||
+              !Array.isArray(
+                imported.transactions
+              )
+            ) {
+
+              throw new Error();
+
+            }
+
+
+            data = {
+
+              name:
+                imported.name || "",
+
+              budget:
+                Number(
+                  imported.budget
+                ) || 0,
+
+              transactions:
+                imported.transactions
+
+            };
+
+
+            saveData();
+
+            updateGreeting();
+
+            renderAll();
+
+            closeSettings();
+
+            alert(
+              "تم استيراد بياناتك بنجاح ✅"
+            );
+
+          } catch {
+
+            alert(
+              "ملف النسخة الاحتياطية غير صالح ❌"
+            );
+
+          }
+
+        };
+
+
+      reader.readAsText(file);
+
+    }
+
+
+    function resetApp() {
+
+      const ok =
+        confirm(
+          "⚠️ سيتم حذف الاسم والميزانية وجميع العمليات. هل أنت متأكد؟"
+        );
+
+
+      if (!ok) return;
+
+
+      localStorage.removeItem(
+        STORAGE_KEY
+      );
+
+
+      location.reload();
+
+    }
+
+
+    function scrollToTop() {
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        loadData();
+
+
+        if (data.name) {
+
+          openApp();
+
+        } else {
+
+          showScreen(
+            "welcomeScreen"
+          );
+
+        }
+
+      }
+    );
+  </script>
+
+</body>
+</html>
