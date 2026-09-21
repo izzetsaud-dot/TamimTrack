@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamim Quiz</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,Tahoma,sans-serif;
+    color:white;
+    background:linear-gradient(135deg,#0f172a,#172554,#111827);
+}
+
+button{
+    font:inherit;
+    border:0;
+    cursor:pointer;
+}
+
+.app{
+    max-width:720px;
+    margin:auto;
+    padding:18px;
+}
+
+header{
+    text-align:center;
+    padding:18px 0;
+}
+
+.logo{
+    font-size:45px;
+}
+
+.title{
+    font-size:32px;
+    font-weight:900;
+}
+
+.sub{
+    opacity:.7;
+    margin-top:6px;
+}
+
+.screen{
+    display:none;
+}
+
+.screen.active{
+    display:block;
+}
+
+.card{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:25px;
+    padding:22px;
+    margin:15px 0;
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.list{
+    display:grid;
+    gap:12px;
+}
+
+.btn{
+    width:100%;
+    padding:16px;
+    border-radius:17px;
+    background:#263449;
+    color:white;
+    font-weight:800;
+    font-size:17px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.15);
+}
+
+.primary{
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+}
+
+.green{
+    background:#166534;
+}
+
+.yellow{
+    background:#a16207;
+}
+
+.red{
+    background:#991b1b;
+}
+
+.back{
+    margin-top:12px;
+    background:#374151;
+}
+
+.player{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:right;
+}
+
+.avatar{
+    font-size:32px;
+}
+
+.question{
+    text-align:center;
+    font-size:24px;
+    font-weight:900;
+    line-height:1.7;
+    margin:25px 0;
+}
+
+.choice{
+    text-align:right;
+    background:#243247;
+    border:2px solid transparent;
+}
+
+.choice.correct{
+    background:#166534;
+    border-color:#4ade80;
+}
+
+.choice.wrong{
+    background:#991b1b;
+    border-color:#f87171;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.badge{
+    display:inline-block;
+    background:#263449;
+    padding:8px 13px;
+    border-radius:999px;
+    font-size:14px;
+}
+
+.progress{
+    height:9px;
+    background:#273449;
+    border-radius:20px;
+    overflow:hidden;
+    margin:18px 0;
+}
+
+.progress span{
+    display:block;
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#22c55e,#3b82f6);
+}
+
+.timer{
+    text-align:center;
+    font-size:21px;
+    font-weight:900;
+}
+
+.score{
+    text-align:center;
+    font-size:19px;
+    line-height:2;
+}
+
+.big{
+    text-align:center;
+    font-size:55px;
+}
+
+.muted{
+    text-align:center;
+    opacity:.7;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:14px;
+    font-size:17px;
+    margin-bottom:10px;
+}
+
+@media(max-width:520px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .question{
+        font-size:21px;
+    }
+
+    .app{
+        padding:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+    <div class="logo">🧠🎮</div>
+    <div class="title">Tamim Quiz</div>
+    <div class="sub">لعبة الأسئلة العائلية</div>
+</header>
+
+
+<!-- الرئيسية -->
+<section id="home" class="screen active">
+
+<div class="card">
+
+<h2>أهلاً بك 👋</h2>
+
+<p class="muted">
+اختر اللاعب ثم اختر الصعوبة والفئة.
+</p>
+
+<div class="grid">
+
+<button class="btn primary"
+onclick="showScreen('players')">
+👨‍👩‍👧‍👦 اختيار اللاعب
+</button>
+
+<button class="btn"
+onclick="showScreen('difficulty')">
+🧠 اختيار الصعوبة
+</button>
+
+<button class="btn"
+onclick="showScreen('categories')">
+📚 الفئات
+</button>
+
+<button class="btn"
+onclick="showLeaderboard()">
+🏆 لوحة الأبطال
+</button>
+
+<button class="btn"
+onclick="showAchievements()">
+⭐ إنجازاتي
+</button>
+
+<button class="btn"
+onclick="showSettings()">
+⚙️ الإعدادات
+</button>
+
+</div>
+</div>
+
+</section>
+
+
+<!-- اختيار اللاعب -->
+<section id="players" class="screen">
+
+<div class="card">
+
+<h2>👨‍👩‍👧‍👦 اختر اللاعب</h2>
+
+<p class="muted">
+اضغط على الاسم وسننتقل مباشرة لاختيار الصعوبة.
+</p>
+
+<div id="playerList" class="list"></div>
+
+<button class="btn primary"
+onclick="addPlayer()">
+➕ لاعب جديد
+</button>
+
+<button class="btn back"
+onclick="showScreen('home')">
+⬅️ رجوع
+</button>
+
+</div>
+
+</section>
+
+
+<!-- اختيار الصعوبة -->
+<section id="difficulty" class="screen">
+
+<div class="card">
+
+<h2>🧠 اختر صعوبة الأسئلة</h2>
+
+<p id="selectedPlayerText" class="muted"></p>
+
+<div class="grid">
+
+<button class="btn green"
+onclick="selectDifficulty('easy')">
+🟢 سهل
+</button>
+
+<button class="btn yellow"
+onclick="selectDifficulty('medium')">
+🟡 متوسط
+</button>
+
+<button class="btn red"
+onclick="selectDifficulty('hard')">
+🔴 صعب
+</button>
+
+<button class="btn primary"
+onclick="selectDifficulty('random')">
+🎲 عشوائي
+</button>
+
+</div>
+
+<button class="btn back"
+onclick="showScreen('players')">
+⬅️ تغيير اللاعب
+</button>
+
+</div>
+
+</section>
+
+
+<!-- اختيار الفئة -->
+<section id="categories" class="screen">
+
+<div class="card">
+
+<h2>📚 اختر فئة الأسئلة</h2>
+
+<div class="grid">
+
+<button class="btn"
+onclick="selectCategory('general')">
+🌍 معلومات عامة
+</button>
+
+<button class="btn"
+onclick="selectCategory('animals')">
+🐾 حيوانات
+</button>
+
+<button class="btn"
+onclick="selectCategory('space')">
+🚀 الفضاء
+</button>
+
+<button class="btn"
+onclick="selectCategory('science')">
+🔬 العلوم
+</button>
+
+<button class="btn"
+onclick="selectCategory('puzzles')">
+🧩 ألغاز وذكاء
+</button>
+
+<button class="btn"
+onclick="selectCategory('islam')">
+🕌 إسلاميات للأطفال
+</button>
+
+<button class="btn"
+onclick="selectCategory('sports')">
+⚽ رياضة
+</button>
+
+<button class="btn"
+onclick="selectCategory('fun')">
+😂 أسئلة ممتعة
+</button>
+
+<button class="btn primary"
+onclick="selectCategory('all')">
+🎲 كل الفئات
+</button>
+
+</div>
+
+<button class="btn back"
+onclick="showScreen('difficulty')">
+⬅️ تغيير الصعوبة
+</button>
+
+</div>
+
+</section>
+
+
+<!-- اللعبة -->
+<section id="game" class="screen">
+
+<div class="card">
+
+<div class="top">
+
+<span id="playerBadge" class="badge"></span>
+
+<span id="difficultyBadge" class="badge"></span>
+
+</div>
+
+<div class="progress">
+<span id="progressBar"></span>
+</div>
+
+<div class="top">
+
+<span id="questionNo"></span>
+
+<span id="gameScore"></span>
+
+</div>
+
+<div id="timer" class="timer"></div>
+
+<div id="question" class="question"></div>
+
+<div id="answers" class="list"></div>
+
+</div>
+
+</section>
+
+
+<!-- النتيجة -->
+<section id="result" class="screen">
+
+<div class="card">
+
+<div class="big">🏆</div>
+
+<h2 id="resultTitle" style="text-align:center"></h2>
+
+<div id="resultStats" class="score"></div>
+
+<br>
+
+<div class="grid">
+
+<button class="btn primary"
+onclick="startGame()">
+🔄 العب مرة ثانية
+</button>
+
+<button class="btn"
+onclick="showScreen('home')">
+🏠 الرئيسية
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- لوحة الأبطال -->
+<section id="leaderboard" class="screen">
+
+<div class="card">
+
+<h2>🏆 لوحة الأبطال</h2>
+
+<div id="leaderboardList" class="list"></div>
+
+<button class="btn back"
+onclick="showScreen('home')">
+⬅️ رجوع
+</button>
+
+</div>
+
+</section>
+
+
+<!-- الإنجازات -->
+<section id="achievements" class="screen">
+
+<div class="card">
+
+<h2>⭐ إنجازاتي</h2>
+
+<div id="achievementList" class="list"></div>
+
+<button class="btn back"
+onclick="showScreen('home')">
+⬅️ رجوع
+</button>
+
+</div>
+
+</section>
+
+
+<!-- الإعدادات -->
+<section id="settings" class="screen">
+
+<div class="card">
+
+<h2>⚙️ الإعدادات</h2>
+
+<button id="soundBtn"
+class="btn"
+onclick="toggleSound()">
+</button>
+
+<br><br>
+
+<button class="btn"
+onclick="toggleVibrate()">
+📳 الاهتزاز:
+<span id="vibrateText"></span>
+</button>
+
+<br><br>
+
+<button class="btn back"
+onclick="showScreen('home')">
+⬅️ رجوع
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================
+   الأسئلة
+========================= */
+
+const questions=[
+
+{
+q:"ما عاصمة فرنسا؟",
+t:"Fransa'nın başkenti neresidir?",
+a:["باريس","لندن","برلين","مدريد"],
+c:0,cat:"general",d:"easy"
+},
+
+{
+q:"كم عدد أيام الأسبوع؟",
+t:"Bir haftada kaç gün vardır?",
+a:["5","6","7","8"],
+c:2,cat:"general",d:"easy"
+},
+
+{
+q:"ما أكبر محيط في العالم؟",
+t:"Dünyanın en büyük okyanusu hangisidir?",
+a:["الأطلسي","الهندي","الهادئ","المتجمد"],
+c:2,cat:"general",d:"medium"
+},
+
+{
+q:"ما اللغة الأكثر تحدثاً كلغة أم في العالم؟",
+t:"Dünyada ana dil olarak en çok konuşulan dil hangisidir?",
+a:["الإنجليزية","الصينية","العربية","الفرنسية"],
+c:1,cat:"general",d:"medium"
+},
+
+{
+q:"كم عدد القارات؟",
+t:"Dünyada kaç kıta vardır?",
+a:["5","6","7","8"],
+c:2,cat:"general",d:"easy"
+},
+
+{
+q:"ما أسرع حيوان بري؟",
+t:"Karada yaşayan en hızlı hayvan hangisidir?",
+a:["الأسد","الفهد","الحصان","النمر"],
+c:1,cat:"animals",d:"easy"
+},
+
+{
+q:"أي حيوان يُسمى سفينة الصحراء؟",
+t:"Hangi hayvana çölün gemisi denir?",
+a:["الجمل","الحصان","الفيل","الغزال"],
+c:0,cat:"animals",d:"easy"
+},
+
+{
+q:"ما أكبر حيوان في العالم؟",
+t:"Dünyanın en büyük hayvanı hangisidir?",
+a:["الفيل","الحوت الأزرق","الزرافة","القرش"],
+c:1,cat:"animals",d:"medium"
+},
+
+{
+q:"كم عدد أرجل العنكبوت؟",
+t:"Bir örümceğin kaç bacağı vardır?",
+a:["6","8","10","12"],
+c:1,cat:"animals",d:"easy"
+},
+
+{
+q:"أي طائر لا يستطيع الطيران؟",
+t:"Hangi kuş uçamaz?",
+a:["الصقر","النسر","البطريق","العصفور"],
+c:2,cat:"animals",d:"easy"
+},
+
+{
+q:"ما الكوكب المعروف بالكوكب الأحمر؟",
+t:"Kızıl Gezegen olarak bilinen gezegen hangisidir?",
+a:["الأرض","المريخ","المشتري","زحل"],
+c:1,cat:"space",d:"easy"
+},
+
+{
+q:"ما أقرب كوكب إلى الشمس؟",
+t:"Güneş'e en yakın gezegen hangisidir?",
+a:["الزهرة","الأرض","عطارد","المريخ"],
+c:2,cat:"space",d:"easy"
+},
+
+{
+q:"كم عدد كواكب المجموعة الشمسية؟",
+t:"Güneş Sistemi'nde kaç gezegen vardır?",
+a:["7","8","9","10"],
+c:1,cat:"space",d:"easy"
+},
+
+{
+q:"ما أكبر كوكب في المجموعة الشمسية؟",
+t:"Güneş Sistemi'ndeki en büyük gezegen hangisidir?",
+a:["زحل","الأرض","المشتري","نبتون"],
+c:2,cat:"space",d:"easy"
+},
+
+{
+q:"ما اسم القمر الطبيعي للأرض؟",
+t:"Dünya'nın doğal uydusunun adı nedir?",
+a:["القمر","فوبوس","أوروبا","تيتان"],
+c:0,cat:"space",d:"easy"
+},
+
+{
+q:"ما الغاز الذي نتنفسه؟",
+t:"Nefes alırken hangi gazı kullanırız?",
+a:["الأكسجين","الهيليوم","الهيدروجين","النيتروجين فقط"],
+c:0,cat:"science",d:"easy"
+},
+
+{
+q:"كم عدد عظام جسم الإنسان تقريباً؟",
+t:"İnsan vücudunda yaklaşık kaç kemik vardır?",
+a:["106","206","306","406"],
+c:1,cat:"science",d:"medium"
+},
+
+{
+q:"ما العضو الذي يضخ الدم؟",
+t:"Kanı vücuda pompalayan organ hangisidir?",
+a:["الرئة","القلب","المعدة","الكبد"],
+c:1,cat:"science",d:"easy"
+},
+
+{
+q:"ما درجة تجمد الماء؟",
+t:"Su kaç derecede donar?",
+a:["0°","10°","50°","100°"],
+c:0,cat:"science",d:"easy"
+},
+
+{
+q:"ما مركز الذرة؟",
+t:"Atomun merkezine ne ad verilir?",
+a:["الإلكترون","النواة","البروتون","الغلاف"],
+c:1,cat:"science",d:"medium"
+},
+
+{
+q:"شيء كلما أخذت منه كبر، ما هو؟",
+t:"Kendisinden aldıkça büyüyen şey nedir?",
+a:["الحفرة","الكتاب","الماء","الطريق"],
+c:0,cat:"puzzles",d:"easy"
+},
+
+{
+q:"ما الشيء الذي له أسنان ولا يعض؟",
+t:"Dişleri olduğu halde ısırmayan şey nedir?",
+a:["الأسد","المشط","الكلب","المنشار"],
+c:1,cat:"puzzles",d:"easy"
+},
+
+{
+q:"شيء يمشي بلا أرجل ويبكي بلا عيون؟",
+t:"Bacakları olmadan yürüyen ve gözleri olmadan ağlayan şey nedir?",
+a:["السحاب","الحجر","الكرسي","القلم"],
+c:0,cat:"puzzles",d:"medium"
+},
+
+{
+q:"ما الشيء الذي إذا زاد نقص؟",
+t:"Arttıkça azalan şey nedir?",
+a:["العمر","المال","الطعام","الكتاب"],
+c:0,cat:"puzzles",d:"medium"
+},
+
+{
+q:"له عين ولا يرى، ما هو؟",
+t:"Gözü olduğu halde görmeyen şey nedir?",
+a:["الإبرة","القمر","الإنسان","الطائر"],
+c:0,cat:"puzzles",d:"easy"
+},
+
+{
+q:"كم عدد الصلوات المفروضة في اليوم؟",
+t:"Bir günde kaç vakit farz namaz vardır?",
+a:["3","4","5","6"],
+c:2,cat:"islam",d:"easy"
+},
+
+{
+q:"ما أول سورة في القرآن؟",
+t:"Kur'an'ın ilk suresi hangisidir?",
+a:["البقرة","الفاتحة","الإخلاص","الناس"],
+c:1,cat:"islam",d:"easy"
+},
+
+{
+q:"كم عدد أركان الإسلام؟",
+t:"İslam'ın kaç şartı vardır?",
+a:["3","4","5","6"],
+c:2,cat:"islam",d:"easy"
+},
+
+{
+q:"في أي شهر يصوم المسلمون؟",
+t:"Müslümanlar hangi ayda oruç tutar?",
+a:["رجب","شعبان","رمضان","محرم"],
+c:2,cat:"islam",d:"easy"
+},
+
+{
+q:"ما قبلة المسلمين؟",
+t:"Müslümanların kıblesi neresidir?",
+a:["المسجد النبوي","الكعبة","المسجد الأقصى","جبل عرفات"],
+c:1,cat:"islam",d:"easy"
+},
+
+{
+q:"كم لاعباً في فريق كرة القدم داخل الملعب؟",
+t:"Bir futbol takımında sahada kaç oyuncu bulunur?",
+a:["9","10","11","12"],
+c:2,cat:"sports",d:"easy"
+},
+
+{
+q:"ما الرياضة التي يستخدم فيها المضرب والكرة الصفراء؟",
+t:"Raket ve sarı top kullanılan spor hangisidir?",
+a:["كرة القدم","التنس","السباحة","الجري"],
+c:1,cat:"sports",d:"easy"
+},
+
+{
+q:"كم حلقة في شعار الألعاب الأولمبية؟",
+t:"Olimpiyatların sembolünde kaç halka vardır?",
+a:["4","5","6","7"],
+c:1,cat:"sports",d:"medium"
+},
+
+{
+q:"ما الرياضة التي تُلعب على الجليد بالعصي؟",
+t:"Buz üzerinde sopalarla oynanan spor hangisidir?",
+a:["هوكي الجليد","كرة القدم","التنس","الجولف"],
+c:0,cat:"sports",d:"medium"
+},
+
+{
+q:"كم شوطاً في مباراة كرة القدم؟",
+t:"Bir futbol maçında kaç devre vardır?",
+a:["1","2","3","4"],
+c:1,cat:"sports",d:"easy"
+},
+
+{
+q:"ما لون الموز غالباً عندما ينضج؟",
+t:"Muz olgunlaştığında genellikle ne renk olur?",
+a:["أزرق","أصفر","بنفسجي","أسود"],
+c:1,cat:"fun",d:"easy"
+},
+
+{
+q:"أي حاسة نستخدمها لرؤية الأشياء؟",
+t:"Eşyaları görmek için hangi duyumuzu kullanırız?",
+a:["السمع","الشم","البصر","اللمس"],
+c:2,cat:"fun",d:"easy"
+},
+
+{
+q:"ما الحيوان الذي يقول مياو؟",
+t:"Miyavlayan hayvan hangisidir?",
+a:["الكلب","القطة","الحصان","البقرة"],
+c:1,cat:"fun",d:"easy"
+},
+
+{
+q:"كم إصبعاً في اليدين معاً؟",
+t:"İki elde toplam kaç parmak vardır?",
+a:["8","9","10","12"],
+c:2,cat:"fun",d:"easy"
+},
+
+{
+q:"ما لون السماء في يوم صافٍ؟",
+t:"Açık ve bulutsuz bir günde gökyüzü ne renktir?",
+a:["أخضر","أزرق","أحمر","برتقالي"],
+c:1,cat:"fun",d:"easy"
+}
+
+];
+
+
+/* =========================
+   بيانات اللاعبين
+========================= */
+
+let players =
+JSON.parse(localStorage.getItem("tamimPlayers") || "null")
+||
+{
+    "سيدرا":{score:0,best:0,correct:0,played:0},
+    "تميم":{score:0,best:0,correct:0,played:0},
+    "شيراز":{score:0,best:0,correct:0,played:0},
+    "تيم":{score:0,best:0,correct:0,played:0}
+};
+
+let currentPlayer =
+localStorage.getItem("tamimCurrent") || "تميم";
+
+let difficulty="easy";
+let category="all";
+
+let soundOn=true;
+let vibrateOn=true;
+
+let round=[];
+let index=0;
+let score=0;
+let correct=0;
+let combo=0;
+let bestCombo=0;
+
+let timer=null;
+let timeLeft=15;
+
+
+/* =========================
+   الصعوبة
+========================= */
+
+const labels={
+    easy:"🟢 سهل",
+    medium:"🟡 متوسط",
+    hard:"🔴 صعب",
+    random:"🎲 عشوائي"
+};
+
+
+/* =========================
+   الحفظ
+========================= */
+
+function save(){
+
+    localStorage.setItem(
+        "tamimPlayers",
+        JSON.stringify(players)
+    );
+
+    localStorage.setItem(
+        "tamimCurrent",
+        currentPlayer
+    );
+}
+
+
+/* =========================
+   تغيير الشاشة
+========================= */
+
+function showScreen(id){
+
+    document
+    .querySelectorAll(".screen")
+    .forEach(x=>x.classList.remove("active"));
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+
+    if(id==="players"){
+        renderPlayers();
+    }
+
+    if(id==="difficulty"){
+
+        document
+        .getElementById("selectedPlayerText")
+        .textContent =
+        currentPlayer
+        ? `👤 اللاعب: ${currentPlayer}`
+        : "اختر اللاعب أولاً";
+    }
+}
+
+
+/* =========================
+   اللاعبين
+========================= */
+
+function renderPlayers(){
+
+    const box=document.getElementById("playerList");
+
+    box.innerHTML="";
+
+    Object.keys(players).forEach(name=>{
+
+        const button=document.createElement("button");
+
+        button.className="btn player";
+
+        button.innerHTML=`
+        <span class="avatar">👤</span>
+        <span>${name}</span>
+        `;
+
+        /*
+        هنا التعديل المهم:
+
+        الضغط على الاسم
+        لا يبدأ اللعبة مباشرة.
+
+        ينتقل إلى اختيار الصعوبة.
+        */
+
+        button.onclick=()=>{
+
+            currentPlayer=name;
+
+            save();
+
+            showScreen("difficulty");
+
+            speak("Şimdi zorluk seviyesini seç");
+        };
+
+        box.appendChild(button);
+    });
+}
+
+
+/* =========================
+   لاعب جديد
+========================= */
+
+function addPlayer(){
+
+    const name=prompt("اكتب اسم اللاعب:");
+
+    if(!name || !name.trim()){
+        return;
+    }
+
+    const clean=name.trim().slice(0,20);
+
+    if(!players[clean]){
+
+        players[clean]={
+            score:0,
+            best:0,
+            correct:0,
+            played:0
+        };
+    }
+
+    currentPlayer=clean;
+
+    save();
+
+    showScreen("difficulty");
+
+    speak("Şimdi zorluk seviyesini seç");
+}
+
+
+/* =========================
+   اختيار الصعوبة
+========================= */
+
+function selectDifficulty(d){
+
+    if(!currentPlayer){
+
+        showScreen("players");
+
+        return;
+    }
+
+    difficulty=d;
+
+    showScreen("categories");
+
+    speak("Şimdi soru kategorisini seç");
+}
+
+
+/* =========================
+   اختيار الفئة
+========================= */
+
+function selectCategory(c){
+
+    category=c;
+
+    startGame();
+}
+
+
+/* =========================
+   جلب الأسئلة
+========================= */
+
+function getQuestions(){
+
+    let arr=questions
