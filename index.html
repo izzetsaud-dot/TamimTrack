@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamim Quiz</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#101828,#172554,#312e81);
+  color:#fff;
+  min-height:100vh;
+}
+
+.app{
+  width:min(720px,94%);
+  margin:auto;
+  padding:25px 0 40px;
+}
+
+.card{
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(12px);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+h1{
+  font-size:42px;
+  text-align:center;
+}
+
+.menu{
+  display:grid;
+  gap:12px;
+}
+
+button{
+  border:0;
+  border-radius:16px;
+  padding:15px 18px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.15s;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+.primary{
+  background:#4f46e5;
+  color:#fff;
+}
+
+.secondary{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+
+.danger{
+  background:#dc2626;
+  color:#fff;
+}
+
+.player{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:10px 0;
+}
+
+.player button{
+  flex:1;
+}
+
+.option{
+  width:100%;
+  margin:7px 0;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  text-align:right;
+}
+
+.option:hover{
+  background:rgba(255,255,255,.2);
+}
+
+.topbar{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:15px;
+}
+
+.stat{
+  background:rgba(255,255,255,.09);
+  border-radius:14px;
+  padding:10px;
+  text-align:center;
+}
+
+.progress{
+  height:8px;
+  background:rgba(255,255,255,.15);
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0;
+}
+
+.progress div{
+  height:100%;
+  background:#22c55e;
+  width:0;
+  transition:.2s;
+}
+
+.timer{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  margin:15px 0;
+}
+
+.question{
+  font-size:25px;
+  line-height:1.6;
+  text-align:center;
+  margin:20px 0;
+}
+
+.feedback{
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+  padding:15px;
+}
+
+.success{
+  text-align:center;
+  padding:25px 10px;
+}
+
+.notice{
+  text-align:center;
+  opacity:.8;
+  margin:10px 0;
+}
+
+.result{
+  text-align:center;
+}
+
+.leaderboard-row{
+  display:flex;
+  justify-content:space-between;
+  padding:13px;
+  margin:7px 0;
+  background:rgba(255,255,255,.08);
+  border-radius:13px;
+}
+
+.achievement{
+  padding:15px;
+  background:rgba(255,255,255,.08);
+  border-radius:14px;
+  margin:8px 0;
+}
+
+.settings-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 0;
+}
+
+.toggle{
+  width:60px;
+  height:32px;
+  border-radius:30px;
+  padding:0;
+  background:#555;
+  position:relative;
+}
+
+.toggle:after{
+  content:"";
+  width:26px;
+  height:26px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  top:3px;
+  right:31px;
+  transition:.2s;
+}
+
+.toggle.on{
+  background:#22c55e;
+}
+
+.toggle.on:after{
+  right:3px;
+}
+
+.small{
+  font-size:13px;
+  opacity:.7;
+}
+
+.category-grid,
+.diff-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.category-grid button,
+.diff-grid button{
+  min-height:70px;
+}
+
+@media(max-width:500px){
+  h1{font-size:34px}
+  .question{font-size:21px}
+  .category-grid,
+  .diff-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app" class="app"></div>
+
+<script>
+/* =========================
+   DATA
+========================= */
+
+const cats={
+  general:"🌍 معلومات عامة",
+  animals:"🐾 الحيوانات",
+  space:"🚀 الفضاء",
+  science:"🔬 العلوم",
+  puzzles:"🧩 ألغاز",
+  islam:"🕌 إسلاميات",
+  sports:"⚽ رياضة",
+  fun:"🎉 متعة",
+  all:"🎯 الكل"
+};
+
+const diffs={
+  easy:"🟢 سهل",
+  medium:"🟡 متوسط",
+  hard:"🔴 صعب",
+  random:"🎲 عشوائي"
+};
+
+const questions=[
+{
+q:"ما عاصمة فرنسا؟",
+a:["باريس","لندن","برلين","مدريد"],
+c:0,cat:"general",d:"easy"
+},
+{
+q:"كم عدد أيام الأسبوع؟",
+a:["5","6","7","8"],
+c:2,cat:"general",d:"easy"
+},
+{
+q:"ما أكبر محيط في العالم؟",
+a:["الأطلسي","الهندي","الهادئ","المتجمد"],
+c:2,cat:"general",d:"medium"
+},
+{
+q:"ما اللغة الأكثر تحدثاً كلغة أم في العالم؟",
+a:["الإنجليزية","الصينية","العربية","الفرنسية"],
+c:1,cat:"general",d:"medium"
+},
+{
+q:"كم عدد القارات؟",
+a:["5","6","7","8"],
+c:2,cat:"general",d:"easy"
+},
+{
+q:"ما أسرع حيوان بري؟",
+a:["الأسد","الفهد","الحصان","النمر"],
+c:1,cat:"animals",d:"easy"
+},
+{
+q:"أي حيوان يُسمى سفينة الصحراء؟",
+a:["الجمل","الحصان","الفيل","الغزال"],
+c:0,cat:"animals",d:"easy"
+},
+{
+q:"ما أكبر حيوان في العالم؟",
+a:["الفيل","الحوت الأزرق","الزرافة","القرش"],
+c:1,cat:"animals",d:"medium"
+},
+{
+q:"كم عدد أرجل العنكبوت؟",
+a:["6","8","10","12"],
+c:1,cat:"animals",d:"easy"
+},
+{
+q:"أي طائر لا يستطيع الطيران؟",
+a:["الصقر","النسر","البطريق","العصفور"],
+c:2,cat:"animals",d:"easy"
+},
+{
+q:"ما الكوكب المعروف بالكوكب الأحمر؟",
+a:["الأرض","المريخ","المشتري","زحل"],
+c:1,cat:"space",d:"easy"
+},
+{
+q:"ما أقرب كوكب إلى الشمس؟",
+a:["الزهرة","الأرض","عطارد","المريخ"],
+c:2,cat:"space",d:"easy"
+},
+{
+q:"كم عدد كواكب المجموعة الشمسية؟",
+a:["7","8","9","10"],
+c:1,cat:"space",d:"easy"
+},
+{
+q:"ما أكبر كوكب في المجموعة الشمسية؟",
+a:["زحل","الأرض","المشتري","نبتون"],
+c:2,cat:"space",d:"easy"
+},
+{
+q:"ما اسم القمر الطبيعي للأرض؟",
+a:["القمر","فوبوس","أوروبا","تيتان"],
+c:0,cat:"space",d:"easy"
+},
+{
+q:"ما الغاز الذي نتنفسه؟",
+a:["الأكسجين","الهيليوم","الهيدروجين","النيتروجين فقط"],
+c:0,cat:"science",d:"easy"
+},
+{
+q:"كم عدد عظام جسم الإنسان تقريباً؟",
+a:["106","206","306","406"],
+c:1,cat:"science",d:"medium"
+},
+{
+q:"ما العضو الذي يضخ الدم؟",
+a:["الرئة","القلب","المعدة","الكبد"],
+c:1,cat:"science",d:"easy"
+},
+{
+q:"ما درجة تجمد الماء؟",
+a:["0°","10°","50°","100°"],
+c:0,cat:"science",d:"easy"
+},
+{
+q:"ما مركز الذرة؟",
+a:["الإلكترون","النواة","البروتون","الغلاف"],
+c:1,cat:"science",d:"medium"
+},
+{
+q:"شيء كلما أخذت منه كبر، ما هو؟",
+a:["الحفرة","الكتاب","الماء","الطريق"],
+c:0,cat:"puzzles",d:"easy"
+},
+{
+q:"ما الشيء الذي له أسنان ولا يعض؟",
+a:["الأسد","المشط","الكلب","المنشار"],
+c:1,cat:"puzzles",d:"easy"
+},
+{
+q:"شيء يمشي بلا أرجل ويبكي بلا عيون؟",
+a:["السحاب","الحجر","الكرسي","القلم"],
+c:0,cat:"puzzles",d:"medium"
+},
+{
+q:"ما الشيء الذي إذا زاد نقص؟",
+a:["العمر","المال","الطعام","الكتاب"],
+c:0,cat:"puzzles",d:"medium"
+},
+{
+q:"له عين ولا يرى، ما هو؟",
+a:["الإبرة","القمر","الإنسان","الطائر"],
+c:0,cat:"puzzles",d:"easy"
+},
+{
+q:"كم عدد الصلوات المفروضة في اليوم؟",
+a:["3","4","5","6"],
+c:2,cat:"islam",d:"easy"
+},
+{
+q:"ما أول سورة في القرآن؟",
+a:["البقرة","الفاتحة","الإخلاص","الناس"],
+c:1,cat:"islam",d:"easy"
+},
+{
+q:"كم عدد أركان الإسلام؟",
+a:["3","4","5","6"],
+c:2,cat:"islam",d:"easy"
+},
+{
+q:"في أي شهر يصوم المسلمون؟",
+a:["رجب","شعبان","رمضان","محرم"],
+c:2,cat:"islam",d:"easy"
+},
+{
+q:"ما قبلة المسلمين؟",
+a:["المسجد النبوي","الكعبة","المسجد الأقصى","جبل عرفات"],
+c:1,cat:"islam",d:"easy"
+},
+{
+q:"كم لاعباً في فريق كرة القدم داخل الملعب؟",
+a:["9","10","11","12"],
+c:2,cat:"sports",d:"easy"
+},
+{
+q:"ما الرياضة التي يستخدم فيها المضرب والكرة الصفراء؟",
+a:["كرة القدم","التنس","السباحة","الجري"],
+c:1,cat:"sports",d:"easy"
+},
+{
+q:"كم حلقة في شعار الألعاب الأولمبية؟",
+a:["4","5","6","7"],
+c:1,cat:"sports",d:"medium"
+},
+{
+q:"ما الرياضة التي تُلعب على الجليد بالعصي؟",
+a:["هوكي الجليد","كرة القدم","التنس","الجولف"],
+c:0,cat:"sports",d:"medium"
+},
+{
+q:"كم شوطاً في مباراة كرة القدم؟",
+a:["1","2","3","4"],
+c:1,cat:"sports",d:"easy"
+},
+{
+q:"ما لون الموز غالباً عندما ينضج؟",
+a:["أزرق","أصفر","بنفسجي","أسود"],
+c:1,cat:"fun",d:"easy"
+},
+{
+q:"أي حاسة نستخدمها لرؤية الأشياء؟",
+a:["السمع","الشم","البصر","اللمس"],
+c:2,cat:"fun",d:"easy"
+},
+{
+q:"ما الحيوان الذي يقول مياو؟",
+a:["الكلب","القطة","الحصان","البقرة"],
+c:1,cat:"fun",d:"easy"
+},
+{
+q:"كم إصبعاً في اليدين معاً؟",
+a:["8","9","10","12"],
+c:2,cat:"fun",d:"easy"
+},
+{
+q:"ما لون السماء في يوم صافٍ؟",
+a:["أخضر","أزرق","أحمر","برتقالي"],
+c:1,cat:"fun",d:"easy"
+}
+];
+
+/* =========================
+   STORAGE
+========================= */
+
+let players=JSON.parse(
+  localStorage.getItem("tamimPlayers") ||
+  '["سيدرا","تميم","شيراز","تيم"]'
+);
+
+let stats=JSON.parse(
+  localStorage.getItem("tamimStats") ||
+  "{}"
+);
+
+let settings=JSON.parse(
+  localStorage.getItem("tamimSettings") ||
+  '{"sound":true}'
+);
+
+function save(){
+  localStorage.setItem("tamimPlayers",JSON.stringify(players));
+  localStorage.setItem("tamimStats",JSON.stringify(stats));
+  localStorage.setItem("tamimSettings",JSON.stringify(settings));
+}
+
+/* =========================
+   GAME STATE
+========================= */
+
+let player="";
+let difficulty="";
+let category="";
+let round=[];
+let index=0;
+let score=0;
+let correct=0;
+let combo=0;
+let bestCombo=0;
+let timer=null;
+let timeLeft=15;
+
+/* =========================
+   AUDIO
+========================= */
+
+let audioContext=null;
+let musicTimer=null;
+
+function getAudio(){
+  if(!audioContext){
+    audioContext=new(
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
+  }
+
+  if(audioContext.state==="suspended"){
+    audioContext.resume();
+  }
+
+  return audioContext;
+}
+
+function sound(freq,duration,type="sine",volume=.07){
+  if(!settings.sound) return;
+
+  const ctx=getAudio();
+
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+
+  osc.type=type;
+  osc.frequency.value=freq;
+
+  gain.gain.setValueAtTime(volume,ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    ctx.currentTime+duration
+  );
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime+duration);
+}
+
+function buttonSound(){
+  sound(520,.08,"sine",.05);
+}
+
+function correctSound(){
+  sound(660,.12,"sine",.08);
+
+  setTimeout(()=>{
+    sound(880,.18,"sine",.08);
+  },120);
+
+  speakEnglish("Bravo!");
+}
+
+function wrongSound(){
+  sound(180,.25,"sawtooth",.08);
+  speakEnglish("Wrong!");
+}
+
+function timeoutSound(){
+  sound(120,.35,"square",.07);
+}
+
+function victorySound(){
+  if(!settings.sound)return;
+
+  [523,659,784,1046].forEach((freq,i)=>{
+    setTimeout(()=>{
+      sound(freq,.18,"sine",.08);
+    },i*130);
+  });
+
+  setTimeout(()=>{
+    speakEnglish("Congratulations!");
+  },500);
+}
+
+function startMusic(){
+  if(!settings.sound)return;
+
+  stopMusic();
+
+  const notes=[
+    261.63,
+    329.63,
+    392,
+    329.63
+  ];
+
+  let i=0;
+
+  musicTimer=setInterval(()=>{
+    sound(
+      notes[i%notes.length],
+      .22,
+      "triangle",
+      .018
+    );
+
+    i++;
+  },700);
+}
+
+function stopMusic(){
+  if(musicTimer){
+    clearInterval(musicTimer);
+    musicTimer=null;
+  }
+}
+
+/* =========================
+   ENGLISH VOICE
+========================= */
+
+function speakEnglish(text){
+  if(
+    !settings.sound ||
+    !("speechSynthesis" in window)
+  )return;
+
+  speechSynthesis.cancel();
+
+  const u=new SpeechSynthesisUtterance(text);
+
+  u.lang="en-US";
+  u.rate=.85;
+  u.pitch=1;
+
+  const voices=speechSynthesis.getVoices();
+
+  const voice=voices.find(v=>
+    v.lang &&
+    v.lang.toLowerCase().startsWith("en")
+  );
+
+  if(voice)u.voice=voice;
+
+  speechSynthesis.speak(u);
+}
+
+function speakPlayerName(){
+  if(
+    !settings.sound ||
+    !("speechSynthesis" in window) ||
+    !player
+  )return;
+
+  let englishName=player;
+
+  if(player==="سيدرا"){
+    englishName="Sidra";
+  }
+  else if(player==="تميم"){
+    englishName="Tamim";
+  }
+  else if(player==="شيراز"){
+    englishName="Shiraz";
+  }
+  else if(player==="تيم"){
+    englishName="Taim";
+  }
+
+  speakEnglish(englishName);
+}
+
+/* =========================
+   APP
+========================= */
+
+function app(html){
+  document.getElementById("app").innerHTML=html;
+}
+
+/* =========================
+   HOME
+========================= */
+
+function home(){
+  stopTimer();
+  stopMusic();
+
+  app(`
+    <div class="card">
+      <h1>🎮 Tamim Quiz</h1>
+
+      <div class="notice">
+        اختبر معلوماتك وتنافس مع أبطال العائلة 🔥
+      </div>
+
+      <div class="menu">
+
+        <button
+          class="primary"
+          onclick="openPlayers()">
+          👤 ابدأ اللعب
+        </button>
+
+        <button
+          class="secondary"
+          onclick="leaderboard()">
+          🏆 المتصدرون
+        </button>
+
+        <button
+          class="secondary"
+          onclick="achievements()">
+          🥇 الإنجازات
+        </button>
+
+        <button
+          class="secondary"
+          onclick="settingsPage()">
+          ⚙️ الإعدادات
+        </button>
+
+      </div>
+    </div>
+  `);
+}
+
+/* =========================
+   PLAYERS
+========================= */
+
+function openPlayers(){
+  buttonSound();
+
+  app(`
+    <div class="card">
+      <h2>👤 اختر اللاعب</h2>
+
+      <div id="playersList"></div>
+
+      <button
+        class="primary"
+        onclick="addPlayer()">
+        ➕ لاعب جديد
+      </button>
+
+      <button
+        class="secondary"
+        style="margin-top:10px"
+        onclick="home()">
+        ⬅️ الرئيسية
+      </button>
+    </div>
+  `);
+
+  renderPlayers();
+}
+
+function renderPlayers(){
+  const el=document.getElementById("playersList");
+
+  if(!el)return;
+
+  el.innerHTML=players.map((p,i)=>`
+    <div class="player">
+      <button
+        class="secondary"
+        onclick="selectPlayer(${i})">
+        👤 ${p}
+      </button>
+    </div>
+  `).join("");
+}
+
+function addPlayer(){
+  const n=prompt("اكتب اسم اللاعب:");
+
+  if(!n)return;
+
+  const name=n.trim();
+
+  if(!name)return;
+
+  if(players.includes(name)){
+    alert("هذا الاسم موجود بالفعل");
+    return;
+  }
+
+  players.push(name);
+  save();
+
+  player=name;
+
+  buttonSound();
+  speakPlayerName();
+
+  setTimeout(()=>{
+    openDifficulty();
+  },500);
+}
+
+function selectPlayer(i){
+  player=players[i];
+
+  buttonSound();
+  speakPlayerName();
+
+  setTimeout(()=>{
+    openDifficulty();
+  },500);
+}
+
+/* =========================
+   DIFFICULTY
+========================= */
+
+function openDifficulty(){
+
+  app(`
+    <div class="card">
+      <h2>🎯 اختر الصعوبة</h2>
+
+      <div class="diff-grid">
+
+        <button
+          class="primary"
+          onclick="selectDifficulty('easy')">
+          🟢 سهل
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectDifficulty('medium')">
+          🟡 متوسط
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectDifficulty('hard')">
+          🔴 صعب
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectDifficulty('random')">
+          🎲 عشوائي
+        </button>
+
+      </div>
+
+      <button
+        class="secondary"
+        style="margin-top:12px"
+        onclick="openPlayers()">
+        ⬅️ رجوع
+      </button>
+    </div>
+  `);
+}
+
+function selectDifficulty(d){
+  difficulty=d;
+
+  buttonSound();
+
+  setTimeout(()=>{
+    openCategories();
+  },150);
+}
+
+/* =========================
+   CATEGORIES
+========================= */
+
+function openCategories(){
+
+  app(`
+    <div class="card">
+      <h2>📚 اختر الفئة</h2>
+
+      <div class="category-grid">
+
+        <button
+          class="primary"
+          onclick="selectCategory('general')">
+          🌍 معلومات عامة
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('animals')">
+          🐾 الحيوانات
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('space')">
+          🚀 الفضاء
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('science')">
+          🔬 العلوم
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('puzzles')">
+          🧩 ألغاز
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('islam')">
+          🕌 إسلاميات
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('sports')">
+          ⚽ رياضة
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('fun')">
+          🎉 متعة
+        </button>
+
+        <button
+          class="primary"
+          onclick="selectCategory('all')">
+          🎯 الكل
+        </button>
+
+      </div>
+
+      <button
+        class="secondary"
+        style="margin-top:12px"
+        onclick="openDifficulty()">
+        ⬅️ رجوع
+      </button>
+    </div>
+  `);
+}
+
+function selectCategory(c){
+  category=c;
+
+  buttonSound();
+
+  setTimeout(()=>{
+    startGame();
+  },150);
+}
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(){
+
+  let pool=questions.filter(q=>{
+
+    const catOK=
+      category==="all" ||
+      q.cat===category;
+
+    const diffOK=
+      difficulty==="random" ||
+      q.d===difficulty;
+
+    return catOK && diffOK;
+  });
+
+  if(pool.length===0){
+    pool=questions.filter(q=>
+      category==="all" ||
+      q.cat===category
+    );
+  }
+
+  round=[...pool];
+
+  round.sort(()=>Math.random()-.5);
+
+  index=0;
+  score=0;
+  correct=0;
+  combo=0;
+  bestCombo=0;
+
+  startMusic();
+
+  loadQuestion();
+}
+
+/* =========================
+   LOAD QUESTION
+========================= */
+
+function loadQuestion(){
+
+  stopTimer();
+
+  if(index>=round.length){
+    finishGame();
+    return;
+  }
+
+  const q=round[index];
+
+  timeLeft=15;
+
+  app(`
+    <div class="topbar">
+
+      <div class="stat">
+        👤 ${player}
+      </div>
+
+      <div class="stat">
+        ⭐ ${score}
+      </div>
+
+      <div class="stat">
+        ❓ ${index+1}/${round.length}
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="progress">
+        <div style="width:${(index/round.length)*100}%"></div>
+      </div>
+
+      <div class="timer" id="timer">
+        ⏱️ ${timeLeft}
+      </div>
+
+      <div class="question">
+        ${q.q}
+      </div>
+
+      <div id="options">
+        ${q.a.map((answer,i)=>`
+          <button
+            class="option"
+            onclick="answerQuestion(${i})">
+            ${answer}
+          </button>
+        `).join("")}
+      </div>
+
+      <div
+        id="feedback"
+        class="feedback">
+      </div>
+
+    </div>
+  `);
+
+  startTimer();
+}
+
+/* =========================
+   ANSWER
+========================= */
+
+function answerQuestion(choice){
+
+  stopTimer();
+
+  const q=round[index];
+
+  const buttons=document.querySelectorAll(".option");
+
+  buttons.forEach(b=>{
+    b.disabled=true;
+  });
+
+  if(choice===q.c){
+
+    correct++;
+
+    combo++;
+
+    if(combo>bestCombo){
+      bestCombo=combo;
+    }
+
+    let pts=10;
+
+    if(difficulty==="medium"){
+      pts=15;
+    }
+
+    if(difficulty==="hard"){
+      pts=20;
+    }
+
+    if(combo>=3){
+      pts+=5;
+    }
+
+    score+=pts;
+
+    correctSound();
+
+    document.getElementById("feedback").innerHTML=
+      `👏 Bravo! <br><span class="small">+${pts} نقطة</span>`;
+
+    buttons[choice].style.background="#16a34a";
+
+  }else{
+
+    combo=0;
+
+    wrongSound();
+
+    document.getElementById("feedback").innerHTML=
+      `❌ Wrong!<br>
+       <span class="small">
+       الإجابة الصحيحة: ${q.a[q.c]}
+       </span>`;
+
+    buttons[choice].style.background="#dc2626";
+    buttons[q.c].style.background="#16a34a";
+  }
+
+  setTimeout(()=>{
+    index++;
+    loadQuestion();
+  },1200);
+}
+
+/* =========================
+   TIMER
+========================= */
+
+function startTimer(){
+
+  timeLeft=15;
+
+  timer=setInterval(()=>{
+
+    timeLeft--;
+
+    const el=document.getElementById("timer");
+
+    if(el){
+      el.textContent=`⏱️ ${timeLeft}`;
+    }
+
+    if(timeLeft<=5 && el){
+      el.style.color="#ef4444";
+    }
+
+    if(timeLeft<=0){
+      timeoutQuestion();
+    }
+
+  },1000);
+}
+
+function stopTimer(){
+
+  if(timer){
+    clearInterval(timer);
+    timer=null;
+  }
+}
+
+function timeoutQuestion(){
+
+  stopTimer();
+
+  timeoutSound();
+
+  const q=round[index];
+
+  const buttons=document.querySelectorAll(".option");
+
+  buttons.forEach(b=>{
+    b.disabled=true;
+  });
+
+  if(buttons[q.c]){
+    buttons[q.c].style.background="#16a34a";
+  }
+
+  combo=0;
+
+  const feedback=document.getElementById("feedback");
+
+  if(feedback){
+    feedback.innerHTML=
+      `⏰ انتهى الوقت!<br>
+       <span class="small">
+       الإجابة الصحيحة: ${q.a[q.c]}
+       </span>`;
+  }
+
+  setTimeout(()=>{
+    index++;
+    loadQuestion();
+  },1200);
+}
+
+/* =========================
+   FINISH
+========================= */
+
+function finishGame(){
+
+  stopTimer();
+  stopMusic();
+
+  victorySound();
+
+  if(!stats[player]){
+    stats[player]={
+      games:0,
+      wins:0,
+      score:0,
+      correct:0,
+      bestCombo:0
+    };
+  }
+
+  stats[player].games++;
+  stats[player].score+=score;
+  stats[player].correct+=correct;
+
+  if(score>0){
+    stats[player].wins++;
+  }
+
+  if(bestCombo>stats[player].bestCombo){
+    stats[player].bestCombo=bestCombo;
+  }
+
+  save();
+
+  const percentage=
+    round.length?
+    Math.round((correct/round.length)*100):
+    0;
+
+  let message="أحسنت! 🎉";
+
+  if(percentage===100){
+    message="🔥 مثالي! كل الإجابات صحيحة!";
+  }
+  else if(percentage>=80){
+    message="🏆 أداء رائع!";
+  }
+  else if(percentage>=50){
+    message="👏 جيد جداً!";
+  }
+  else{
+    message="💪 حاول مرة أخرى!";
+  }
+
+  app(`
+    <div class="card result">
+
+      <div class="success">
+
+        <h1>🏆</h1>
+
+        <h2>${message}</h2>
+
+        <h3>${player}</h3>
+
+        <p>⭐ النقاط: <b>${score}</b></p>
+
+        <p>✅ الإجابات الصحيحة:
+          <b>${correct}/${round.length}</b>
+        </p>
+
+        <p>📊 النتيجة:
+          <b>${percentage}%</b>
+        </p>
+
+        <p>🔥 أفضل كومبو:
+          <b>${bestCombo}</b>
+        </p>
+
+      </div>
+
+      <div class="menu">
+
+        <button
+          class="primary"
+          onclick="replayGame()">
+          🔄 العب مرة أخرى
+        </button>
+
+        <button
+          class="secondary"
+          onclick="openPlayers()">
+          👤 تغيير اللاعب
+        </button>
+
+        <button
+          class="secondary"
+          onclick="leaderboard()">
+          🏆 المتصدرون
+        </button>
+
+        <button
+          class="secondary"
+          onclick="home()">
+          🏠 الرئيسية
+        </button>
+
+      </div>
+
+    </div>
+  `);
+}
+
+function replayGame(){
+  buttonSound();
+  startGame();
+}
+
+/* =========================
+   LEADERBOARD
+========================= */
+
+function leaderboard(){
+
+  const list=Object.keys(stats)
+    .map(name=>({
+      name,
+      score:stats[name].score||0
+    }))
+    .sort((a,b)=>b.score-a.score);
+
+  app(`
+    <div class="card">
+
+      <h2>🏆 المتصدرون</h2>
+
+      ${
+        list.length?
+        list.map((x,i)=>`
+          <div class="leaderboard-row">
+            <span>
+              ${i===0?"🥇":i===1?"🥈":i===2?"🥉":"🏅"}
+              ${x.name}
+            </span>
+
+            <b>${x.score} ⭐</b>
+          </div>
+        `).join("")
+        :
+        `<div class="notice">
+          لا توجد نتائج بعد.
+        </div>`
+      }
+
+      <button
+        class="secondary"
+        style="margin-top:12px"
+        onclick="home()">
+        ⬅️ الرئيسية
+      </button>
+
+    </div>
+  `);
+}
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+
+function achievements(){
+
+  const totalGames=Object.values(stats)
+    .reduce((sum,x)=>sum+(x.games||0),0);
+
+  const totalCorrect=Object.values(stats)
+    .reduce((sum,x)=>sum+(x.correct||0),0);
+
+  const best=Object.values(stats)
+    .reduce((max,x)=>Math.max(max,x.bestCombo||0),0);
+
+  app(`
+    <div class="card">
+
+      <h2>🥇 الإنجازات</h2>
+
+      <div class="achievement">
+        🎮 المباريات
+        <b>${totalGames}</b>
+      </div>
+
+      <div class="achievement">
+        ✅ إجابات صحيحة
+        <b>${totalCorrect}</b>
+      </div>
+
+      <div class="achievement">
+        🔥 أفضل كومبو
+        <b>${best}</b>
+      </div>
+
+      ${
+        best>=5?
+        `<div class="achievement">
+          🔥🔥 ملك الكومبو!
+        </div>`:""
+      }
+
+      ${
+        totalGames>=10?
+        `<div class="achievement">
+          🎮 لاعب محترف!
+        </div>`:""
+      }
+
+      ${
+        totalCorrect>=50?
+        `<div class="achievement">
+          🧠 موسوعة!
+        </div>`:""
+      }
+
+      <button
+        class="secondary"
+        style="margin-top:12px"
+        onclick="home()">
+        ⬅️ الرئيسية
+      </button>
+
+    </div>
+  `);
+}
+
+/* =========================
+   SETTINGS
+========================= */
+
+function settingsPage(){
+
+  app(`
+    <div class="card">
+
+      <h2>⚙️ الإعدادات</h2>
+
+      <div class="settings-row">
+
+        <span>
+          🔊 الأصوات والموسيقى
+        </span>
+
+        <button
+          id="soundToggle"
+          class="toggle ${settings.sound?"on":""}"
+          onclick="toggleSound()">
+        </button>
+
+      </div>
+
+      <div class="notice small">
+        صوت الأسماء والتفاعل والمؤثرات أثناء اللعب.
+      </div>
+
+      <button
+        class="secondary"
+        style="margin-top:10px"
+        onclick="home()">
+        ⬅️ الرئيسية
+      </button>
+
+    </div>
+  `);
+}
+
+function toggleSound(){
+
+  settings.sound=!settings.sound;
+
+  if(!settings.sound){
+    stopMusic();
+    speechSynthesis.cancel();
+  }
+
+  save();
+
+  settingsPage();
+}
+
+/* =========================
+   AUDIO UNLOCK FOR iPHONE
+========================= */
+
+document.addEventListener("click",()=>{
+  try{
+    getAudio();
+  }catch(e){}
+},{once:true});
+
+/* =========================
+   START
+========================= */
+
+home();
+
+</script>
+
+</body>
+</html>
