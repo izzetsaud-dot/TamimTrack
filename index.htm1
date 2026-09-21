@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+
+  <title>TamimTrack 💰</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="app">
+
+    <!-- الرأس -->
+    <header class="header">
+      <img
+        src="image.svg"
+        alt="TamimTrack"
+        class="app-image"
+      >
+
+      <div>
+        <h1>💰 TamimTrack</h1>
+        <p>إدارة مصاريفك بذكاء وبسهولة</p>
+      </div>
+    </header>
+
+
+    <!-- الإحصائيات -->
+    <section class="stats">
+
+      <div class="stat-card">
+        <span>💰 الإجمالي</span>
+        <strong id="total">€0.00</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>📅 هذا الشهر</span>
+        <strong id="monthTotal">€0.00</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>📋 عدد المصاريف</span>
+        <strong id="expenseCount">0</strong>
+      </div>
+
+    </section>
+
+
+    <!-- إضافة مصروف -->
+    <section class="card">
+
+      <h2>➕ إضافة مصروف</h2>
+
+      <label for="expenseName">اسم المصروف</label>
+
+      <input
+        id="expenseName"
+        type="text"
+        placeholder="مثلاً: مشتريات"
+      >
+
+
+      <label for="expenseAmount">المبلغ (€)</label>
+
+      <input
+        id="expenseAmount"
+        type="number"
+        placeholder="0.00"
+        step="0.01"
+        min="0"
+      >
+
+
+      <label for="expenseCategory">التصنيف</label>
+
+      <select id="expenseCategory">
+        <option value="🍔 طعام">🍔 طعام</option>
+        <option value="🚗 مواصلات">🚗 مواصلات</option>
+        <option value="🛒 تسوق">🛒 تسوق</option>
+        <option value="🏠 فواتير">🏠 فواتير</option>
+        <option value="💊 صحة">💊 صحة</option>
+        <option value="🎮 ترفيه">🎮 ترفيه</option>
+        <option value="💳 ديون">💳 ديون</option>
+        <option value="📦 أخرى">📦 أخرى</option>
+      </select>
+
+
+      <label for="expenseDate">التاريخ</label>
+
+      <input
+        id="expenseDate"
+        type="date"
+      >
+
+
+      <button
+        type="button"
+        onclick="addExpense()"
+      >
+        ➕ إضافة المصروف
+      </button>
+
+    </section>
+
+
+    <!-- البحث -->
+    <section class="card">
+
+      <div class="section-title">
+        <h2>🔎 البحث</h2>
+      </div>
+
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="ابحث عن مصروف..."
+        oninput="searchExpenses()"
+      >
+
+    </section>
+
+
+    <!-- المصاريف -->
+    <section class="card">
+
+      <div class="section-title">
+
+        <h2>📋 المصاريف</h2>
+
+        <button
+          type="button"
+          onclick="clearAllExpenses()"
+          class="danger-button"
+        >
+          🗑️ مسح الكل
+        </button>
+
+      </div>
+
+
+      <div id="expenseList">
+
+        <p class="empty">
+          لا توجد مصاريف حتى الآن 📭
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- الإحصائيات -->
+    <section class="card">
+
+      <h2>📊 ملخص المصاريف</h2>
+
+      <div class="summary">
+
+        <div>
+          <span>🍔 طعام</span>
+          <strong id="foodTotal">€0.00</strong>
+        </div>
+
+        <div>
+          <span>🚗 مواصلات</span>
+          <strong id="transportTotal">€0.00</strong>
+        </div>
+
+        <div>
+          <span>🛒 تسوق</span>
+          <strong id="shoppingTotal">€0.00</strong>
+        </div>
+
+        <div>
+          <span>🏠 فواتير</span>
+          <strong id="billsTotal">€0.00</strong>
+        </div>
+
+        <div>
+          <span>💊 صحة</span>
+          <strong id="healthTotal">€0.00</strong>
+        </div>
+
+        <div>
+          <span>📦 أخرى</span>
+          <strong id="otherTotal">€0.00</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- أسفل التطبيق -->
+    <footer>
+
+      <p>
+        TamimTrack 💰
+      </p>
+
+      <small>
+        مصاريفك تحت السيطرة 🚀
+      </small>
+
+    </footer>
+
+  </main>
+
+
+  <script src="app.js"></script>
+
+</body>
+</html>
